@@ -1,0 +1,28 @@
+{
+  "author": "Bjørge Næss <bjoerge@gmail.com>",
+  "name": "deferred.js",
+  "description": "A simple Promises/A implementation for Node and the browser.",
+  "version": "0.0.5",
+  "homepage": "http://github.com/bjoerge/deferred.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bjoerge/deferred.js.git"
+  },
+  "main": "deferred.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha -R spec",
+    "test-browser": "./node_modules/.bin/browserify -r expect.js -o tmp/browser.js -e extra/browser.coffee;coffee -o ./tmp -c ./test;open test/browser.html"
+  },
+  "engines": {
+    "node": "~0.6.10"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "latest",
+    "coffee-script": "latest",
+    "expect.js": "latest",
+    "sinon": "git://github.com/cjohansen/Sinon.JS.git",
+    "browserify": "latest"
+  },
+  "optionalDependencies": {}
+}
