@@ -72,6 +72,7 @@
         _this = this,
         callbacks = {},
         state = 'pending',
+        notifications = [],
         fulfill = function (type, values) {
           state = type === 'resolve' ? 'resolved' : 'rejected';
           finalize(_this);
@@ -91,12 +92,18 @@
         fulfill('reject', arguments);
       };
       this.notify = function (/*value1, ..., valueN */) {
+        notifications.push(arguments);
         invokeEach(callbacks.notify, arguments);
       };
 
       // -- Promise API
       this.then = function (success, error, progress, always) {
         addListener(callbacks, success, error, progress, always);
+        if (progress && notifications.length > 0) {
+          notifications.forEach(function(args) {
+            progress.apply(null, args)
+          });
+        }
         return this;
       };
     }

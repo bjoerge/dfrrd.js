@@ -100,11 +100,25 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
 
       expect(spy.calledTwice).to.be(true)
 
+    it "notifies progress listeners added later", ->
+      spy = sinon.spy()
+      d = Deferred()
+      d.notify("tick 1")
+      d.notify("tick 2")
+      d.notify("tick 3")
+
+      d.progress(spy)
+      
+      expect(spy.calledWith("tick 1")).to.be(true)
+      expect(spy.calledWith("tick 2")).to.be(true)
+      expect(spy.calledWith("tick 3")).to.be(true)
+      expect(spy.calledThrice).to.be(true)
+      
     it "resolves immediately if Deferred.when is called without any arguments", ->
       d = Deferred()
       spy = sinon.spy()
       Deferred.when().then spy
-      expect(spy.called).to.be(true)
+      expect(spy.calledOnce).to.be(true)
 
     it "notifies always-listeners when resolved", ->
       d = Deferred()
