@@ -100,6 +100,12 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
 
       expect(spy.calledTwice).to.be(true)
 
+    it "resolves immediately if Deferred.when is called without any arguments", ->
+      d = Deferred()
+      spy = sinon.spy()
+      Deferred.when().then spy
+      expect(spy.called).to.be(true)
+
     it "notifies always-listeners when resolved", ->
       d = Deferred()
       spy = sinon.spy()

@@ -1,12 +1,13 @@
 (function (global) {
+  'use strict';
   var
     // -- Utils
     slice = Array.prototype.slice,
     isFunction = function (obj) {
-      return Object.prototype.toString.call(obj) == '[object Function]';
+      return Object.prototype.toString.call(obj) === '[object Function]';
     },
     invokeEach = function (funcs, args) {
-      if (typeof funcs == 'undefined' || funcs.length == 0) return;
+      if (typeof funcs === 'undefined' || funcs.length === 0) { return; }
       for (var i = 0, len = funcs.length; i < len; i++) {
         var func = funcs[i];
         func.apply(func, args);
@@ -20,7 +21,7 @@
       for (; i < arguments.length && i < len; i++) {
         listener = arguments[i+1];
 
-        if (!isFunction(listener)) continue;
+        if (!isFunction(listener)) { continue; }
 
         event = events[i];
         if (!callbacks.hasOwnProperty(event)) {
@@ -37,8 +38,9 @@
     },
     synchronize = function (promise, type, values) {
       promise.then = function (success, error, progress, always) {  // Switch to synchronized
-        (type == 'resolve' && success.apply(success, values)) || isFunction(error) && error.apply(error, values);
-        isFunction(always) && always.apply(always, values);
+        if (type === 'resolve') { success.apply(success, values); }
+        else if (isFunction(error)) { error.apply(error, values); }
+        if (isFunction(always)) { always.apply(always, values); }
       };
     },
     makePromise = (function () {
@@ -58,18 +60,20 @@
           return deferred.always.apply(deferred, arguments); 
         };
         return p;
-      }
+      };
     })();
 
   var Deferred = (function () {
     function Deferred() {
 
-      if (!(this instanceof Deferred)) return new Deferred();
+      if (!(this instanceof Deferred)) { return new Deferred(); }
 
       var
         _this = this,
         callbacks = {},
+        state = 'pending',
         fulfill = function (type, values) {
+          state = type === 'resolve' ? 'resolved' : 'rejected';
           finalize(_this);
           synchronize(_this, type, values);
           notify(callbacks, type, values);
@@ -77,6 +81,9 @@
         };
 
       // -- Deferred API
+      this.state = function() {
+        return state;
+      };
       this.resolve = function (/*value1, ..., valueN */) {
         fulfill('resolve', arguments);
       };
@@ -114,13 +121,13 @@
     (function() {
       var saveResult = function (memory, type, index, values) {
         memory[type][index] = values;
-        memory[type == 'resolved' ? 'rejected' : 'resolved'][index] = undefined;
+        memory[type === 'resolved' ? 'rejected' : 'resolved'][index] = undefined;
         memory.count[type]++;
       },
       check = function (memory, deferred) {
         var completedCount = memory.count.resolved + memory.count.rejected;
-        if (completedCount == memory.count.total) {
-          if (memory.count.resolved == memory.count.total) {
+        if (completedCount === memory.count.total) {
+          if (memory.count.resolved === memory.count.total) {
             deferred.resolve.apply(deferred, memory.resolved);
           }
           else {
@@ -133,11 +140,11 @@
         promise.then(
             function(/* value1, ..., valueN */) {
               saveResult(memory, 'resolved', index, slice.apply(arguments));
-              check(memory, deferred)
+              check(memory, deferred);
             },
             function(/* value1, ..., valueN */) {
               saveResult(memory, 'rejected', index, slice.apply(arguments));
-              check(memory, deferred)
+              check(memory, deferred);
             }
         );
       };
@@ -148,13 +155,14 @@
             promise = deferred.promise();
 
         promise.join = function() {
+          if (arguments.length == 0) deferred.resolve();
           for (var i = 0; i < arguments.length; i++) {
             join(memory, deferred, arguments[i]);
           }
           return promise;
         };
         return promise;        
-      }
+      };
     })();
 
     Deferred.when = function() {
@@ -167,7 +175,7 @@
       minor: 0,
       patch: 5,
       toString: function() {
-        return [this.major, this.minor, this.patch].join(".")
+        return [this.major, this.minor, this.patch].join(".");
       }
     };
     return Deferred;
