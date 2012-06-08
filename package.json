@@ -2,7 +2,7 @@
   "author": "Bjørge Næss <bjoerge@gmail.com>",
   "name": "deferred.js",
   "description": "A simple Promises/A implementation for Node and the browser.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "homepage": "http://github.com/bjoerge/deferred.js",
   "repository": {
     "type": "git",
