@@ -10,8 +10,8 @@
 
 # Download
 
-- <a href="https://raw.github.com/bjoerge/deferred.js/master/dist/dfrrd.js">Development</a>
-- <a href="https://raw.github.com/bjoerge/deferred.js/master/dist/dfrrd.min.js">Minified</a>
+- <a href="https://raw.github.com/bjoerge/dfrrd.js/master/dist/dfrrd.js">Development</a>
+- <a href="https://raw.github.com/bjoerge/dfrrd.js/master/dist/dfrrd.min.js">Minified</a>
 
 # How to use
 
