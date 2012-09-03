@@ -2,7 +2,7 @@
   "author": "Bjørge Næss <bjoerge@gmail.com>",
   "name": "dfrrd",
   "description": "An ultra-simple Deferred (Promises/A) implementation for Node and the browser.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "http://github.com/bjoerge/dfrrd.js",
   "repository": {
     "type": "git",
