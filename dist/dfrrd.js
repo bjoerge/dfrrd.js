@@ -176,15 +176,6 @@
       var chain = Deferred.chain(); 
       return chain.join.apply(chain, arguments);
     };
-
-    Deferred.VERSION = {
-      major: 0,
-      minor: 0,
-      patch: 5,
-      toString: function() {
-        return [this.major, this.minor, this.patch].join(".");
-      }
-    };
     return Deferred;
   })();
 
