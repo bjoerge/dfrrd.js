@@ -1,20 +1,20 @@
 {
   "author": "Bjørge Næss <bjoerge@gmail.com>",
-  "name": "deferred.js",
-  "description": "A simple Promises/A implementation for Node and the browser.",
-  "version": "0.0.6",
-  "homepage": "http://github.com/bjoerge/deferred.js",
+  "name": "dfrrd",
+  "description": "An ultra-simple Deferred (Promises/A) implementation for Node and the browser.",
+  "version": "0.1.0",
+  "homepage": "http://github.com/bjoerge/dfrrd.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bjoerge/deferred.js.git"
+    "url": "git://github.com/bjoerge/dfrrd.js.git"
   },
-  "main": "deferred.js",
+  "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha -R spec",
-    "test-browser": "./node_modules/.bin/browserify -r expect.js -o tmp/browser.js -e extra/browser.coffee;coffee -o ./tmp -c ./test;open test/browser.html"
+    "test-browser": "./node_modules/.bin/coffee test/server test/browser.html"
   },
   "engines": {
-    "node": "~0.6.10"
+    "node": "*"
   },
   "dependencies": {},
   "devDependencies": {
@@ -22,7 +22,8 @@
     "coffee-script": "latest",
     "expect.js": "latest",
     "sinon": "git://github.com/cjohansen/Sinon.JS.git",
-    "browserify": "latest"
+    "browserify": "latest",
+    "express": "latest"
   },
   "optionalDependencies": {}
 }

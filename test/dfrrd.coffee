@@ -1,11 +1,17 @@
-Deferred = require('../deferred')
-expect = require("expect.js")
-sinon = require("sinon")
+if window?
+  Deferred = window.Deferred
+  expect = window.expect
+  sinon = window.sinon
+else
+  Deferred = if process.env.MOCHA_COVERAGE then require('../lib-cov/dfrrd') else require('../lib/dfrrd')
+  expect = require("expect.js")
+  sinon = require("sinon")
+
 
 after = (ms, func)->
   setTimeout(func, ms)
 
-describe "Deferred #{Deferred.VERSION.toString()}", ->
+describe "Dfrrd #{Deferred.VERSION.toString()}", ->
 
   describe "Instantiation", ->
     it "can be instantiated using new", ->
@@ -23,18 +29,20 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
       d.resolve()
       expect(d.resolve).to.throwException(/already completed/i)
 
-    it "Synchronously call listeners when they are added if promise is already fullfilled", (done) ->
-      spy = sinon.spy()      
-      d = Deferred()
-      after 10, ->
-        d.resolve("win!")
-        expect(spy.called).to.be(true)
-        d.then(spy)
-        expect(spy.calledTwice).to.be(true)        
+    it "Synchronously call listeners when they are added if promise is already fullfilled", ->
+      # When successful
+      successCallback = sinon.spy()
+      willSucceed = Deferred()
+      willSucceed.resolve("win!")
+      willSucceed.then successCallback
+      expect(successCallback.calledOnce).to.be(true)
 
-      d.then(spy)
-      expect(spy.called).to.be(false)
-      d.always -> done()
+      # When it fails
+      failureCallback = sinon.spy()
+      willFail = Deferred()
+      willFail.reject("Ohno!")
+      willFail.fail failureCallback
+      expect(failureCallback.calledOnce).to.be(true)
 
     it "Notifies always-listeners after then/success/fail listeners", ->
       spyAlways = sinon.spy()
@@ -169,6 +177,16 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
       expect(spySuccess.called).to.be(false)
       expect(spyComplete.called).to.be(true)
 
+    it "can be queried about state", ->
+      expect(Deferred().state()).to.be 'pending'
+      resolve = Deferred()
+      resolve.resolve("fantastic")
+      expect(resolve.state()).to.be 'resolved'
+
+      reject = Deferred()
+      reject.reject("not so good")
+      expect(reject.state()).to.be 'rejected'
+
   describe "Promise API", ->
     it "Lacks mutators", ->
       promise = Deferred().promise()
@@ -185,16 +203,18 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
       d = Deferred()
       promise = d.promise()
       promise.then(spySuccess, spyFailure, spyProgress, spyComplete)
+      promise.progress(spyProgress)
+      promise.always(spyComplete)
       d.notify("tick")
       d.notify("tack")
       d.reject("Bam!")
 
       expect(spyProgress.calledWith("tick")).to.be(true)
       expect(spyProgress.calledWith("tack")).to.be(true)
-      expect(spyProgress.calledTwice).to.be(true)
+      expect(spyProgress.callCount).to.be(4)
       expect(spyFailure.calledWith("Bam!")).to.be(true)
       expect(spySuccess.called).to.be(false)
-      expect(spyComplete.called).to.be(true)
+      expect(spyComplete.calledTwice).to.be(true)
       
     it "allows for registering listeners using both deferred api and promise api", ->
       deferredSpy = sinon.spy()
@@ -271,22 +291,3 @@ describe "Deferred #{Deferred.VERSION.toString()}", ->
       d1.resolve('d1')
 
       expect(spy.calledWith(['d1'], ['d2'], ['d3'], ['d4'])).to.be(true)
-
-    it "A CoffeeScript example destructing arguments (see test/deferred.coffee)", ->
-      d1 = Deferred()
-      d2 = Deferred()
-      d3 = Deferred()
-      d4 = Deferred()
-
-      spy = sinon.spy()
-      Deferred.when(d1, d2).join(d3, d4).then ([d1, d11], [d2], [d3], [d4]) ->
-        expect(d1).to.eql("arg1")
-        expect(d11).to.eql("arg2")
-        expect(d2).to.eql("d2")
-        expect(d3).to.eql("d3")
-        expect(d4).to.eql("d4")
-
-      d3.resolve('d3')
-      d4.resolve('d4')
-      d2.resolve('d2')
-      d1.resolve('arg1', 'arg2')

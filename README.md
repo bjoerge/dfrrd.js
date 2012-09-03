@@ -1,43 +1,55 @@
-# Deferred.js
+# Dfrrd
 
-- A simple Promises/A implementation for Node and the browser.
+- A ultra-simple and robust Deferred + Promises/A implementation for Node and the browser.
+
+## Project goals
+
+- Keep it simple to the bone
+- Keep it closely aligned to the jQuery Deferred API
+- Test coverage > 97%
+
+# Download
+
+- <a href="https://raw.github.com/bjoerge/deferred.js/master/dist/dfrrd.js">Development</a>
+- <a href="https://raw.github.com/bjoerge/deferred.js/master/dist/dfrrd.min.js">Minified</a>
 
 # How to use
 
-
-### Include it as a dependency in your project's package.json:
+## Include it as a dependency in your project's package.json:
 
 ```json
 "dependencies": {
-  "deferred.js": "git://github.com/bjoerge/deferred.js.git#master"
+  "dfrrd": "latest"
 }
 ```
 
-  Install dependencies
+## Install using npm
 
-    $ npm install
+    $ npm install dfrrd
 
-
-### Install using npm
-
-    $ npm install git://github.com/bjoerge/deferred.js.git#master
-
+# Usage examples
 
 ## Node.js
 
     $ node
-    > var Deferred = require("deferred.js")
+    > var Deferred = require("dfrrd")
     > var deferred = new Deferred()
     > deferred.then(function(value) { console.log("Resolved with: ", value) })
     > setTimeout(function() { deferred.resolve("Yay!") }, 1000)
     // ... wait a sec
-    > Resolved with:  Yay!
+    > Resolved with: Yay!
 
 ## Browser
 
-Copy deferred.js and include in your project or just hotlink from this repo
+Copy dfrrd.js and include in your project
 
-    <script src="https://raw.github.com/bjoerge/deferred.js/master/deferred.js"></script>
+    <script src="/path/to/deferred.js"></script>
+
+    <script>
+      var deferred = new Deferred()
+      deferred.then(function(value) { console.log("Resolved with: ", value) })
+      setTimeout(function() { deferred.resolve("Yay!") }, 1000)
+    </script>
 
 ## Run Mocha tests
 
