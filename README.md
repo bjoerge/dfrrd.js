@@ -1,6 +1,8 @@
 # Dfrrd
 
-- A ultra-simple and robust Deferred + Promises/A implementation for Node and the browser.
+- An ultra-simple and robust Deferred + Promises/A implementation for Node and the browser.
+
+[![Build Status](https://secure.travis-ci.org/bjoerge/dfrrd.js.png)](http://travis-ci.org/bjoerge/dfrrd.js)
 
 ## Project goals
 
