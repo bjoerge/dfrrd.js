@@ -11,7 +11,7 @@ else
 after = (ms, func)->
   setTimeout(func, ms)
 
-describe "Dfrrd #{Deferred.VERSION.toString()}", ->
+describe "Dfrrd", ->
 
   describe "Instantiation", ->
     it "can be instantiated using new", ->
